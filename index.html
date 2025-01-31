@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Драздыстан — Виртуальная Империя</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&family=Orbitron:wght@500&family=Ubuntu:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --main-color: #2ecc71;
+            --accent-color: #27ae60;
+            --dark-bg: #2c3e50;
+            --light-bg: #ecf0f1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--light-bg);
+            color: #2c3e50;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Декоративные элементы по краям */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, var(--main-color) 10%, transparent 70%);
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        body::before {
+            top: -50px;
+            left: -50px;
+        }
+
+        body::after {
+            bottom: -50px;
+            right: -50px;
+        }
+
+        /* Анимированный хедер */
+        .hero {
+            background: linear-gradient(135deg, var(--main-color), var(--accent-color));
+            padding: 180px 20px 120px;
+            text-align: center;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5rem;
+            color: white;
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+            margin-bottom: 1.5rem;
+            animation: textFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes textFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Акцент на Telegram */
+        .telegram-cta {
+            background: var(--dark-bg);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin: 40px 0;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .telegram-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg') no-repeat center center/contain;
+            opacity: 0.05;
+            z-index: 1;
+        }
+
+        .telegram-cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .telegram-cta a {
+            background: var(--main-color);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+            position: relative;
+            z-index: 2;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .telegram-cta a:hover {
+            background: var(--accent-color);
+        }
+
+        /* Секция валюты */
+        .currency-section {
+            background: white;
+            padding: 50px;
+            margin: 40px 0;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .currency-section h2 {
+            font-size: 2.5rem;
+            color: var(--main-color);
+            margin-bottom: 20px;
+        }
+
+        .currency-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .currency-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .currency-section ul li {
+            background: var(--light-bg);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        /* Исторические события */
+        .timeline-item {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--main-color);
+            transition: width 0.3s;
+        }
+
+        .timeline-item:hover::before {
+            width: 100%;
+        }
+
+        .timeline-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timeline-item p {
+            font-size: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timeline-item .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .timeline-item.active .details {
+            max-height: 500px;
+        }
+
+        /* Социальные кнопки */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 50px auto;
+        }
+
+        .social-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--main-color);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .social-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .social-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .social-icon {
+            font-size: 2.5rem;
+            color: var(--main-color);
+            margin-bottom: 15px;
+        }
+
+        /* Авторские права */
+        footer {
+            background: var(--dark-bg);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+        }
+
+        footer a {
+            color: var(--main-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <h1>ДРАЗДЫСТАН</h1>
+        <p>Виртуальная империя нового поколения со своими прикольчиками и должностями!</p>
+    </header>
+
+    <!-- Акцент на Telegram -->
+    <section class="telegram-cta">
+        <h2>Сердце Драздыстана — наш Telegram!</h2>
+        <p>Именно здесь рождаются идеи, принимаются решения и строится наше будущее.</p>
+        <a href="https://t.me/Tsarstvo_Drasbistan" target="_blank">Присоединиться</a>
+    </section>
+
+    <!-- Секция валюты -->
+    <section class="currency-section">
+        <h2>💰 Драздыни — Национальная Валюта</h2>
+        <p>Драздыни — это не просто валюта, это основа нашей экономики. Они используются для:</p>
+        <ul>
+            <li>Покупки виртуальных товаров и услуг</li>
+            <li>Участия в эксклюзивных мероприятиях</li>
+            <li>Инвестиций в проекты Драздыстана</li>
+            <li>Поддержки творческих инициатив</li>
+        </ul>
+        <p>Заработать драздыни можно:</p>
+        <ul>
+            <li>Участвуя в активностях страны</li>
+            <li>Выполняя работу</li>
+            <li>Создавая контент для сообщества</li>
+            <li>Торгуя на внутреннем рынке</li>
+        <h2>🎮 Драздыстан Games — Национальная разработка игр</h2>
+            <li>Создают игры</li>
+            <li>Создают сайты (даже этот)</li>
+            <li>Создают приложения</li>
+            <li>Работают в быстром темпе</li>
+        </ul>
+    </section>
+
+    <!-- Историческая секция -->
+    <section class="section">
+        <h2>📜 Хронология Событий и тд</h2>
+        <div class="timeline">
+            <div class="timeline-item" onclick="toggleDetails(this)">
+                <h3>Основание Драздыстана</h3>
+                <p>10 июля 2024</p>
+                <div class="details">
+                    <p>Драздыстан был основан как виртуальная страна для молодёжи. С самого начала мы стремились создать уникальное пространство для творчества и общения. Развивали экономику и старались сделать всё для процветания нашего царства! Получилось всё не идеально но если мы ещё здесь но нам можно верить!</p>
+                </div>
+            </div>
+            <div class="timeline-item" onclick="toggleDetails(this)">
+                <h3>Первая Революция</h3>
+                <p>27 августа 2024</p>
+                <div class="details">
+                    <p>Первая революция стала важным этапом в истории Драздыстана. Мы доказали, что наше сообщество способно преодолевать любые трудности. Саша, Кузя решили объеденится из за споров о языке. Создали Клараду, но у них нечего не вышло и после умолений царя, Саша 1 вернулся в наше царство.</p>
+                </div>
+            </div>
+            <div class="timeline-item" onclick="toggleDetails(this)">
+                <h3>Вторая Революция</h3>
+                <p>18 ноября 2024</p>
+                <div class="details">
+                    <p>Вторая революция укрепила нашу страну и показала, что Драздыстан — это сила, с которой нужно считаться. Саша 2  попытался уничтожить драздыстан с лица земли но наже царство и не шелохнулось! Так нечего и не предпреняв Саша скрылся с позором.</p>
+                </div>
+            </div>
+            <div class="timeline-item" onclick="toggleDetails(this)">
+                <h3>Теракт на Minecraft-сервере</h3>
+                <p>16 января 2025</p>
+                <div class="details">
+                    <p>Теракт стал испытанием для нашего сообщества, Из за одного гражданина сервер не выдержал. Он ломал сервер через exe файлы при том что у него не были включены читы он смог сломать нам весь сервер... Но он попрежнему работает по IP адресу sirius.minerent.net:25690</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Социальные медиа -->
+    <section class="section">
+        <h2>🌐 Мы в соцсетях</h2>
+        <div class="social-grid">
+            <a href="https://www.youtube.com/@TsarstvoDrazdistan/videos" class="social-card" target="_blank">
+                <i class="fab fa-youtube social-icon"></i>
+                <h3>YouTube</h3>
+                <p>Видео и шортсы</p>
+            </a>
+            <a href="https://www.twitch.tv/drazdistan" class="social-card" target="_blank">
+                <i class="fab fa-twitch social-icon"></i>
+                <h3>Twitch</h3>
+                <p>Прямые эфиры и стримы</p>
+            </a>
+            <a href="https://www.tiktok.com/@drazdistan.offical" class="social-card" target="_blank">
+                <i class="fab fa-tiktok social-icon"></i>
+                <h3>TikTok</h3>
+                <p>Короткие видео и мемы</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Авторские права -->
+    <footer>
+        <p>&copy; 2025 Драздыстан. Все права защищены.</p>
+        <p>Сайт разработан с душой для прекрасной страны!</p>
+        <p>Разработано Драздыстан Games 🎮
+    </footer>
+
+    <script>
+        // Раскрытие деталей событий
+        function toggleDetails(item) {
+            item.classList.toggle('active');
+        }
+
+        // Анимация появления секций
+        const sections = document.querySelectorAll('.section');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Параллакс эффект для хедера
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            document.querySelector('.hero').style.backgroundPositionY = -(scrolled * 0.5) + 'px';
+        });
+    </script>
+
+</body>
+</html>

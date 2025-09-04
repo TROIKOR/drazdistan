@@ -1,412 +1,384 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Драздыстан — Виртуальная Империя</title>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&family=Orbitron:wght@500&family=Ubuntu:wght@300;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --main-color: #2ecc71;
-            --accent-color: #27ae60;
-            --dark-bg: #2c3e50;
-            --light-bg: #ecf0f1;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Царство Драздыстан</title>
+  <meta name="description" content="Царство Драздыстан — минималистичный сайт. Подать заявку, история, люди, проекты." />
+  <style>
+    /* ========== VARIABLES & RESET ========== */
+    :root{
+      --bg: #0b0d10; /* Default dark theme */
+      --panel: #0f1720;
+      --muted: #9aa3ae;
+      --text: #e6eef5;
+      --border: #121417;
+      --green: #2FA43B;
+      --dark: #2B2D3A;
+      --accent: #2FA43B; /* Changed default accent color to green */
+      --glass: rgba(8,10,12,0.6);
+      --radius-lg: 16px;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    /* Light theme overrides (using prefers-color-scheme) */
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #ffffff;
+        --panel: #ffffff;
+        --muted: #6b7280;
+        --text: #0b1220;
+        --border: #e6e9ef;
+        --glass: rgba(255,255,255,0.6);
+        --accent: #111827; /* Reset accent color for light theme */
+      }
+    }
 
-        body {
-            font-family: 'Exo 2', sans-serif;
-            background: var(--light-bg);
-            color: #2c3e50;
-            line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
-        }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+    a{color:inherit}
+    img{display:block;max-width:100%}
+    /* smooth scroll for anchors */
+    html { scroll-behavior: smooth; }
 
-        /* Декоративные элементы по краям */
-        body::before,
-        body::after {
-            content: '';
-            position: fixed;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, var(--main-color) 10%, transparent 70%);
-            opacity: 0.1;
-            z-index: -1;
-        }
+    /* ========== LAYOUT ========== */
+    header{
+      position:sticky; top:0; z-index:60;
+      backdrop-filter: blur(8px);
+      background: var(--glass);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-wrap{max-width:1120px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand .flag{width:36px;height:24px;border-radius:6px;overflow:hidden;border:1px solid var(--border)}
+    .brand .title{font-weight:600}
+    nav.links{display:flex;gap:20px;align-items:center}
+    nav.links a{font-size:15px;color:var(--muted);text-decoration:none; padding:6px 8px;border-radius:8px; transition: color 0.2s, background-color 0.2s;}
+    nav.links a:hover{color:var(--accent); background:rgba(255, 255, 255, 0.05);}
 
-        body::before {
-            top: -50px;
-            left: -50px;
-        }
+    .controls{display:flex;align-items:center;gap:12px}
 
-        body::after {
-            bottom: -50px;
-            right: -50px;
-        }
+    main{max-width:1120px;margin:0 auto;padding:28px 20px}
 
-        /* Анимированный хедер */
-        .hero {
-            background: linear-gradient(135deg, var(--main-color), var(--accent-color));
-            padding: 180px 20px 120px;
-            text-align: center;
-            position: relative;
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-            animation: gradientShift 15s ease infinite;
-        }
+    /* ========== HERO ========== */
+    .hero{display:flex;gap:36px;align-items:center;padding:36px 0}
+    .hero-left{flex:1;min-width:260px}
+    .chips{display:flex;gap:10px;margin-bottom:14px}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);font-size:13px;color:var(--muted);background:transparent}
+    .title{font-weight:700;line-height:1.02;font-size:40px;margin:0}
+    @media(min-width:980px){ .title{font-size:56px} }
+    .subtitle{max-width:640px;margin-top:12px;color:var(--muted);font-size:16px}
+    .cta-row{margin-top:18px;display:flex;gap:12px;align-items:center}
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+    .btn-apply{
+      display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
+      background:var(--accent); color:white; text-decoration:none; font-weight:600;
+      box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+      transition:transform .14s ease,opacity .14s ease;
+    }
+    .btn-apply:hover{ transform:translateY(-2px); opacity:0.95 }
 
-        .hero h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 4.5rem;
-            color: white;
-            text-shadow: 3px 3px 10px rgba(0,0,0,0.2);
-            margin-bottom: 1.5rem;
-            animation: textFloat 3s ease-in-out infinite;
-        }
+    /* flag & coat */
+    .hero-right{width:360px;max-width:42%;display:flex;flex-direction:column;align-items:center;gap:14px}
+    .flag-large{width:100%;height:200px;border-radius:14px;overflow:hidden;border:1px solid var(--border)}
 
-        @keyframes textFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+    /* ========== SECTIONS ========== */
+    section{padding:36px 0}
+    .section-title{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:600;margin-bottom:18px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:var(--panel);border-radius:12px;padding:14px;border:1px solid var(--border);box-shadow:0 6px 18px rgba(11,18,32,0.03); transition: background-color 0.3s, border-color 0.3s;}
+    .meta{color:var(--muted);font-size:13px}
 
-        /* Акцент на Telegram */
-        .telegram-cta {
-            background: var(--dark-bg);
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-            margin: 40px 0;
-            border-radius: 20px;
-            position: relative;
-            overflow: hidden;
-        }
+    /* ========== TIMELINE ========== */
+    .timeline-wrap{position:relative;padding:18px 12px 12px}
+    .timeline-line{position:absolute;left:22px;top:0;bottom:0;width:2px;background:var(--border);border-radius:2px}
+    .timeline-item{position:relative;padding:22px 12px 22px 56px;opacity:0; transform:translateY(18px); transition:all .48s cubic-bezier(.2,.9,.3,1); }
+    .timeline-item.visible{opacity:1; transform:none}
+    .timeline-item:before{content:'';position:absolute;left:16px;top:28px;width:12px;height:12px;border-radius:50%;background:var(--panel);border:3px solid var(--accent);box-shadow:0 2px 8px rgba(2,6,23,0.06)}
+    .timeline-date{font-size:13px;color:var(--muted);margin-bottom:6px}
+    .timeline-title{font-weight:600}
 
-        .telegram-cta::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg') no-repeat center center/contain;
-            opacity: 0.05;
-            z-index: 1;
-        }
+    /* ========== PEOPLE/PROJECTS GRID ========== */
+    .grid-people{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .person{padding:14px;border-radius:12px;border:1px solid var(--border);background:var(--panel); transition: background-color 0.3s, border-color 0.3s;}
+    .person h4{margin:0 0 6px 0}
+    .person .role{font-size:13px;color:var(--muted)}
 
-        .telegram-cta h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 2;
-        }
+    /* ========== FOOTER ========== */
+    footer{padding:28px 0;color:var(--muted);border-top:1px solid var(--border); transition: background-color 0.3s, border-color 0.3s;}
 
-        .telegram-cta a {
-            background: var(--main-color);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background 0.3s;
-            position: relative;
-            z-index: 2;
-            display: inline-block;
-            margin-top: 20px;
-        }
+    /* responsive */
+    @media(max-width:920px){
+      .hero{flex-direction:column}
+      .hero-right{width:100%}
+      .grid-3{grid-template-columns:1fr}
+      .grid-people{grid-template-columns:1fr 1fr}
+      nav.links{display:none}
+    }
+    @media(max-width:520px){ .grid-people{grid-template-columns:1fr} }
 
-        .telegram-cta a:hover {
-            background: var(--accent-color);
-        }
-
-        /* Секция валюты */
-        .currency-section {
-            background: white;
-            padding: 50px;
-            margin: 40px 0;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        }
-
-        .currency-section h2 {
-            font-size: 2.5rem;
-            color: var(--main-color);
-            margin-bottom: 20px;
-        }
-
-        .currency-section p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .currency-section ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .currency-section ul li {
-            background: var(--light-bg);
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-
-        /* Исторические события */
-        .timeline-item {
-            background: white;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: var(--main-color);
-            transition: width 0.3s;
-        }
-
-        .timeline-item:hover::before {
-            width: 100%;
-        }
-
-        .timeline-item h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .timeline-item p {
-            font-size: 1rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .timeline-item .details {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease;
-        }
-
-        .timeline-item.active .details {
-            max-height: 500px;
-        }
-
-        /* Социальные кнопки */
-        .social-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            max-width: 1000px;
-            margin: 50px auto;
-        }
-
-        .social-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .social-card::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--main-color);
-            transform: scaleX(0);
-            transition: transform 0.3s;
-        }
-
-        .social-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        }
-
-        .social-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .social-icon {
-            font-size: 2.5rem;
-            color: var(--main-color);
-            margin-bottom: 15px;
-        }
-
-        /* Авторские права */
-        footer {
-            background: var(--dark-bg);
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: 60px;
-        }
-
-        footer a {
-            color: var(--main-color);
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    /* Icon Styles */
+    .icon {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+      margin-right: 5px;
+      /* You can use background-image and a sprite, or an icon font, or inline SVG */
+      /* Example with a simple filled circle */
+       background-color: var(--muted);
+       border-radius: 50%;
+    }
+    /* Hide the theme toggle */
+    #themeToggle {
+        display: none;
+    }
+  </style>
 </head>
 <body>
-
-    <header class="hero">
-        <h1>ДРАЗДЫСТАН</h1>
-        <p>Виртуальная империя нового поколения со своими прикольчиками и должностями!</p>
-    </header>
-
-    <!-- Акцент на Telegram -->
-    <section class="telegram-cta">
-        <h2>Сердце Драздыстана — наш Telegram!</h2>
-        <p>Именно здесь рождаются идеи, принимаются решения и строится наше будущее.</p>
-        <a href="https://t.me/Tsarstvo_Drasbistan" target="_blank">Присоединиться</a>
-    </section>
-
-    <!-- Секция валюты -->
-    <section class="currency-section">
-        <h2>💰 Драздыни — Национальная Валюта</h2>
-        <p>Драздыни — это не просто валюта, это основа нашей экономики. Они используются для:</p>
-        <ul>
-            <li>Покупки виртуальных товаров и услуг</li>
-            <li>Участия в эксклюзивных мероприятиях</li>
-            <li>Инвестиций в проекты Драздыстана</li>
-            <li>Поддержки творческих инициатив</li>
-        </ul>
-        <p>Заработать драздыни можно:</p>
-        <ul>
-            <li>Участвуя в активностях страны</li>
-            <li>Выполняя работу</li>
-            <li>Создавая контент для сообщества</li>
-            <li>Торгуя на внутреннем рынке</li>
-        <h2>🎮 Драздыстан Games — Национальная разработка игр</h2>
-            <li>Создают игры</li>
-            <li>Создают сайты (даже этот)</li>
-            <li>Создают приложения</li>
-            <li>Работают в быстром темпе</li>
-        </ul>
-    </section>
-
-    <!-- Историческая секция -->
-    <section class="section">
-        <h2>📜 Хронология Событий и тд</h2>
-        <div class="timeline">
-            <div class="timeline-item" onclick="toggleDetails(this)">
-                <h3>Основание Драздыстана</h3>
-                <p>10 июля 2024</p>
-                <div class="details">
-                    <p>Драздыстан был основан как виртуальная страна для молодёжи. С самого начала мы стремились создать уникальное пространство для творчества и общения. Развивали экономику и старались сделать всё для процветания нашего царства! Получилось всё не идеально но если мы ещё здесь но нам можно верить!</p>
-                </div>
-            </div>
-            <div class="timeline-item" onclick="toggleDetails(this)">
-                <h3>Первая Революция</h3>
-                <p>27 августа 2024</p>
-                <div class="details">
-                    <p>Первая революция стала важным этапом в истории Драздыстана. Мы доказали, что наше сообщество способно преодолевать любые трудности. Саша, Кузя решили объеденится из за споров о языке. Создали Клараду, но у них нечего не вышло и после умолений царя, Саша 1 вернулся в наше царство.</p>
-                </div>
-            </div>
-            <div class="timeline-item" onclick="toggleDetails(this)">
-                <h3>Вторая Революция</h3>
-                <p>18 ноября 2024</p>
-                <div class="details">
-                    <p>Вторая революция укрепила нашу страну и показала, что Драздыстан — это сила, с которой нужно считаться. Саша 2  попытался уничтожить драздыстан с лица земли но наже царство и не шелохнулось! Так нечего и не предпреняв Саша скрылся с позором.</p>
-                </div>
-            </div>
-            <div class="timeline-item" onclick="toggleDetails(this)">
-                <h3>Теракт на Minecraft-сервере</h3>
-                <p>16 января 2025</p>
-                <div class="details">
-                    <p>Теракт стал испытанием для нашего сообщества, Из за одного гражданина сервер не выдержал. Он ломал сервер через exe файлы при том что у него не были включены читы он смог сломать нам весь сервер... Но он попрежнему работает по IP адресу sirius.minerent.net:25690</p>
-                </div>
-            </div>
+  <header>
+    <div class="nav-wrap" role="navigation" aria-label="Главная навигация">
+      <div class="brand">
+        <div class="flag" aria-hidden="true">
+          <!-- inline 3-stripe flag (no gradient) -->
+          <svg viewBox="0 0 600 360" width="36" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="600" height="120" y="0" fill="#2FA43B"></rect>
+            <rect width="600" height="120" y="120" fill="#FFFFFF"></rect>
+            <rect width="600" height="120" y="240" fill="#2B2D3A"></rect>
+          </svg>
         </div>
-    </section>
+        <div class="title">Драздыстан</div>
+      </div>
 
-    <!-- Социальные медиа -->
-    <section class="section">
-        <h2>🌐 Мы в соцсетях</h2>
-        <div class="social-grid">
-            <a href="https://www.youtube.com/@TsarstvoDrazdistan/videos" class="social-card" target="_blank">
-                <i class="fab fa-youtube social-icon"></i>
-                <h3>YouTube</h3>
-                <p>Видео и шортсы</p>
-            </a>
-            <a href="https://www.twitch.tv/drazdistan" class="social-card" target="_blank">
-                <i class="fab fa-twitch social-icon"></i>
-                <h3>Twitch</h3>
-                <p>Прямые эфиры и стримы</p>
-            </a>
-            <a href="https://www.tiktok.com/@drazdistan.offical" class="social-card" target="_blank">
-                <i class="fab fa-tiktok social-icon"></i>
-                <h3>TikTok</h3>
-                <p>Короткие видео и мемы</p>
-            </a>
+      <nav class="links" aria-label="Разделы сайта">
+        <a href="#about"><span class="icon"></span>О ДЦ</a>
+        <a href="#history"><span class="icon"></span>История</a>
+        <a href="#people"><span class="icon"></span>Люди</a>
+        <a href="#projects"><span class="icon"></span>Проекты</a>
+      </nav>
+
+      <div class="controls">
+        <a class="btn-apply" id="applyBtn" href="https://docs.google.com/forms/d/e/1FAIpQLSet8Cw3k4-DBreK6IVFxkE4ySu4bwdZqtO551xToAkm1xSM_A/viewform?usp=sharing&ouid=101999827646046867107" target="_blank" rel="noopener noreferrer" aria-label="Подать заявку">
+          <!-- rocket simple icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2c0 0-2 2.5-6 6s-6 6-6 6 2 0 6-2 6-6 6-6 2 0 6 0 6 2 6 2-2-2.5-6-6S12 2 12 2z" fill="currentColor" opacity="0.08"/></svg>
+          Подать заявку
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="about" aria-labelledby="h-main">
+      <div class="hero-left">
+        <div class="chips">
+          <div class="chip" title="Основано"><span class="icon"></span> Основано 10 июля 2024</div>
+          <div class="chip" title="Период"><span class="icon"></span> 2024–2025</div>
         </div>
+
+        <h1 id="h-main" class="title">Царство Драздыстан</h1>
+        <p class="subtitle">Виртуальное государство в Telegram: сообщества, конституция, язык, проекты и культура. Минимализм в форме — амбиции в содержании.</p>
+
+        <div class="cta-row">
+          <a class="btn-apply" href="https://docs.google.com/forms/d/e/1FAIpQLSet8Cw3k4-DBreK6IVFxkE4ySu4bwdZqtO551xToAkm1xSM_A/viewform?usp=sharing&ouid=101999827646046867107" target="_blank" rel="noopener noreferrer">
+            <!-- rocket icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 22s4-1 8-5c0 0 1 4 5 5 0 0 .3-4 4-8 3.7-3.7 2-12-1-15s-11.3-3-15 1C-1 9 2 22 2 22z" fill="currentColor" opacity="0.08"/></svg>
+            Подать заявку
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-right" aria-hidden="true">
+        <div class="flag-large" title="Флаг Драздыстана">
+          <!-- larger flag (same svg) -->
+          <svg viewBox="0 0 600 360" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="600" height="120" y="0" fill="#2FA43B"></rect>
+            <rect width="600" height="120" y="120" fill="#FFFFFF"></rect>
+            <rect width="600" height="120" y="240" fill="#2B2D3A"></rect>
+          </svg>
+        </div>
+      </div>
     </section>
 
-    <!-- Авторские права -->
-    <footer>
-        <p>&copy; 2025 Драздыстан. Все права защищены.</p>
-        <p>Сайт разработан с душой для прекрасной страны!</p>
-        <p>Разработано Драздыстан Games 🎮
-    </footer>
+    <!-- ABOUT (brief) -->
+    <section id="about-more" aria-labelledby="about-h" style="padding-top:6px;margin-top:-40px;">
+      <div class="section-title" id="about-h"><span class="icon"></span> О ДЦ</div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px">
+          <p class="meta">Драздынское Царство — сообщество, родившееся 10 июля 2024 года. В конце июля запустили ключевые чаты и каналы: «Драздыстан чат», язык, УК, Конституция, «Драздыстан Геймз» и др.</p>
+          <p style="margin-top:10px">Наш девиз: <strong>Свобода · Мир · Процветание</strong>. Мы ценим культуру, порядок и созидание.</p>
+        </div>
+      </div>
+    </section>
 
-    <script>
-        // Раскрытие деталей событий
-        function toggleDetails(item) {
-            item.classList.toggle('active');
-        }
+    <!-- TIMELINE -->
+    <section id="history" aria-labelledby="history-h">
+      <div class="section-title" id="history-h"><span class="icon"></span> История</div>
+      <div class="timeline-wrap">
+        <div class="timeline-line" aria-hidden="true"></div>
 
-        // Анимация появления секций
-        const sections = document.querySelectorAll('.section');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
+        <div class="timeline-item">
+          <div class="timeline-date">10.07.2024</div>
+          <div class="timeline-title">Основано Драздынское Королевство</div>
+        </div>
 
-        sections.forEach(section => {
-            observer.observe(section);
+        <div class="timeline-item">
+          <div class="timeline-date">30.07.2024</div>
+          <div class="timeline-title">Создание колонии на Кипре</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">27.08.2024</div>
+          <div class="timeline-title">1-я драздынская революция</div>
+          <div class="meta">разногласия по языку</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">28.08.2024</div>
+          <div class="timeline-title">Переименование в Драздынское царство (по референдуму)</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">30.12.2024</div>
+          <div class="timeline-title">Установление дипломатических отношений с Малоссией</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">03.03.2025</div>
+          <div class="timeline-title">Революция в Дибилостане (инициировано ДЦ)</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">13.03.2025</div>
+          <div class="timeline-title">Первые выборы зам. царя — победа партии «Завтрашний день»</div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">07.08.2025</div>
+          <div class="timeline-title">Кирилл удалил участников — восстановлены</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PEOPLE -->
+    <section id="people" aria-labelledby="people-h">
+      <div class="section-title" id="people-h"><span class="icon"></span> Люди</div>
+      <div class="grid-people" style="margin-top:12px;">
+        <div class="person card">
+          <h4>Никита</h4>
+          <div class="role">Царь ДЦ</div>
+          <p style="margin-top:8px">Лучший царь на планете.</p>
+        </div>
+        <div class="person card">
+          <h4>Саша</h4>
+          <div class="role">Художник, соавтор языка</div>
+          <p style="margin-top:8px">Брат Коли, соавтор языка.</p>
+        </div>
+        <div class="person card">
+          <h4>Коля</h4>
+          <div class="role">Герой ДЦ 3 степени</div>
+          <p style="margin-top:8px">Создатель Драздыстан Games и многое другое.</p>
+        </div>
+        <div class="person card">
+          <h4>Кот Рыжий</h4>
+          <div class="role">Патриот</div>
+          <p style="margin-top:8px">Легенда ДЦ — пришёл по ролику.</p>
+        </div>
+        <div class="person card">
+          <h4>Кирилл</h4>
+          <div class="role">Ранний участник</div>
+          <p style="margin-top:8px">Был с основания, позднее — конфликт.</p>
+        </div>
+        <div class="person card">
+          <h4>Лёня</h4>
+          <div class="role">Судья</div>
+          <p style="margin-top:8px">Крутой чел, немного неадекватный :)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" aria-labelledby="projects-h">
+      <div class="section-title" id="projects-h"><span class="icon"></span> Проекты</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:12px">
+        <div class="card">
+          <h4>Драздыстан Games</h4>
+          <div class="meta">Игры, сайты, видео, боты и многое другое.</div>
+        </div>
+        <div class="card">
+          <h4>Драздынский язык</h4>
+          <div class="meta">Фирменный язык Драздыстана.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div style="max-width:1120px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;gap:12px;align-items:center">
+        <div style="width:36px;height:24px;border-radius:6px;overflow:hidden;border:1px solid var(--border)"><!-- flag small --><svg viewBox="0 0 600 360" width="36" height="24" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="120" y="0" fill="#2FA43B"></rect><rect width="600" height="120" y="120" fill="#FFFFFF"></rect><rect width="600" height="120" y="240" fill="#2B2D3A"></rect></svg></div>
+        <div>
+          <div style="font-weight:600">Драздыстан</div>
+          <div class="meta">Свобода · Мир · Процветание</div>
+        </div>
+      </div>
+      <div class="meta">© <span id="yearSpan"></span> Драздыстан · Минимализм</div>
+
+    </div>
+  </footer>
+
+  <script>
+    // set year
+    document.getElementById('yearSpan').textContent = new Date().getFullYear();
+
+    // Intersection Observer to reveal timeline & people items
+    (function(){
+      const obs = new IntersectionObserver((entries, o) => {
+        entries.forEach(en => {
+          if(en.isIntersecting){
+            en.target.classList.add('visible');
+            o.unobserve(en.target);
+          }
         });
+      }, { threshold: 0.12 });
 
-        // Параллакс эффект для хедера
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            document.querySelector('.hero').style.backgroundPositionY = -(scrolled * 0.5) + 'px';
+      document.querySelectorAll('.timeline-item').forEach(n => obs.observe(n));
+      // also animate person cards
+      document.querySelectorAll('.person').forEach((el, idx) => {
+        el.style.opacity = 0;
+        el.style.transform = 'translateY(12px)';
+        el.style.transition = `all 520ms cubic-bezier(.2,.9,.3,1) ${idx*60}ms`;
+        obs.observe(el); // reuse observer (will add visible class)
+      });
+
+      // add handler for nodes that need visible class
+      const obs2 = new IntersectionObserver((entries, o) => {
+        entries.forEach(en => {
+          if(en.isIntersecting){
+            en.target.classList.add('visible');
+            en.target.style.opacity = 1;
+            en.target.style.transform = 'none';
+            o.unobserve(en.target);
+          }
         });
-    </script>
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.person').forEach(n => obs2.observe(n));
+    })();
 
+    // enhance anchor clicks on small screens: close mobile nav when clicking (if any)
+    (function(){
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', () => {
+          // nothing else needed — CSS smooth scroll handles it.
+        });
+      });
+    })();
+
+    // small accessibility: focus-visible outlines for keyboard users
+    (function(){
+      document.addEventListener('keyup', (e) => {
+        if(e.key === 'Tab') document.documentElement.classList.add('using-keyboard');
+      });
+    })();
+  </script>
 </body>
 </html>
